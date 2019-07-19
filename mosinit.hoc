@@ -1,0 +1,25 @@
+
+if (name_declared("simname") == 0) {
+	execute("strdef simname")
+	execute("simname=\"results\"")
+}
+
+strdef fstem
+sprint(fstem,"Results/%s", simname)
+
+print "simname = ", simname, ", fstem = ", fstem
+
+if (name_declared("batchflag") == 0) {
+	batchflag = 0
+}
+
+if (name_declared("plotflag") == 0) {
+	plotflag = 1
+}
+tstop = 800
+
+load_file("nrngui.hoc") // load_file
+load_file("stimcellclass.hoc")
+load_file("define_stimcells.hoc")
+load_file("example1.hoc")
+load_file("produceoutput.hoc")

@@ -1,0 +1,35 @@
+begintemplate stimcell
+
+	public pp, connect2target, is_art, noiseFromRandom, setnoiseFromRandom, gid
+	public x, y, z, position, xpos, ypos, zpos
+	objref pp
+
+	proc init() {
+		actemp() 	
+	}
+		proc actemp() {
+				pp = new MyNetStim(.5)
+				pp.interval = 1000/8 // Gives an 8 Hz rhythm with an interval of 125 ms
+				pp.number = 1e9
+				pp.noise = 0 // 0 = no noise, same interval every time. 1 = maximum noise, variable interval with poisson mean of 125 ms				
+				pp.start = 0
+			}
+	proc setnoiseFromRandom() {
+		pp.noiseFromRandom($o1)
+	}
+
+	func is_art() {return 1}
+	
+	obfunc connect2target() {localobj nc
+		nc = new NetCon(pp, $o1)
+  	if (numarg() == 2) { $o2 = nc } // for backward compatibility
+  	return nc
+	}
+
+	proc position(){
+		x = $1  y = $2  z = $3	
+		xpos = $1  ypos = $2  zpos = $3	
+		pp.position(xpos, ypos, zpos)
+	}
+
+endtemplate stimcell
