@@ -1,10 +1,6 @@
 // define_stimcells.hoc
 
 
-addSynInputs = 1 // 2: synaptic inputs and current injection
-				 // 1: synaptic inputs only
-				 // 0: current injection only
-
 
 objref excStimcell_list, inhDendStimcell_list, inhSomaStimcell_list
 excStimcell_list = new List()

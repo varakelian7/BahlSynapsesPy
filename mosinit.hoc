@@ -18,6 +18,12 @@ if (name_declared("plotflag") == 0) {
 }
 tstop = 800
 
+
+addSynInputs = 2 // 2: synaptic inputs and current injection
+				 // 1: synaptic inputs only
+				 // 0: current injection only
+
+
 load_file("nrngui.hoc") // load_file
 load_file("stimcellclass.hoc")
 load_file("define_stimcells.hoc")
