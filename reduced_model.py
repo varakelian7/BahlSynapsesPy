@@ -1,3 +1,5 @@
+from neuron import h
+
 class reduced_cell_model():
 	def __init__(self):
 		self.x = 0; self.y = 0; self.z = 0
@@ -74,11 +76,11 @@ class reduced_cell_model():
 		
 		for sec in self.apicaltree_list:
 			for seg in sec:
-				seg.gbar_kfast = self.soma.gbar_kfast(0.5) * exp(-distance(seg.x)/decay_kfast)
-				seg.gbar_kslow = self.soma.gbar_kslow(0.5) * exp(-distance(seg.x)/decay_kslow)
+				seg.gbar_kfast = self.soma.gbar_kfast(0.5) * math.exp(-h.distance(self.soma(0.5),seg.x)/decay_kfast)
+				seg.gbar_kslow = self.soma.gbar_kslow(0.5) * math.exp(-h.distance(self.soma(0.5),seg.x)/decay_kslow)
 		
-		self.tuft.mih = gbar_ih/h.distance(0)
-		self.tuft.mnat = (gbar_nat-self.soma.gbar_nat(0.5))/h.distance(0)
+		self.tuft.mih = self.soma.gbar_ih/h.distance(0)
+		self.tuft.mnat = (self.soma.gbar_nat-self.soma.gbar_nat(0.5))/h.distance(0)
 		
 		for seg in self.apical:
 			seg.gbar_nat = self.apical.mnat*h.distance(seg.x) + self.soma.gbar_nat(0.5)
@@ -98,9 +100,9 @@ class reduced_cell_model():
 		Ra_apical = 261
 		self.apical.Ra =  Ra_apical
 
-		self.hillock.Ra = soma.Ra
-		self.axon.Ra = soma.Ra
-		self.iseg.Ra = soma.Ra
+		self.hillock.Ra = self.soma.Ra
+		self.axon.Ra = self.soma.Ra
+		self.iseg.Ra = self.soma.Ra
 
 		for sec in self.all: # 'all' defined in build_subsets
 			sec.insert('pas')

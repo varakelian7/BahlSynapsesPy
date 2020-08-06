@@ -19,15 +19,15 @@ NEURON {
 	SUFFIX sca
 	USEION ca READ eca WRITE ica
 	RANGE m, h, gca, gbar
-	RANGE minf, hinf, mtau, htau, inactF, actF
-	GLOBAL q10, temp, tadj, vmin, vmax, vshift
+	RANGE minf, hinf, mtau, htau, inactF, actF, vshift
+	GLOBAL q10, temp, tadj, vmin, vmax
 }
 
 PARAMETER {
     inactF = 3
 	actF   = 1
 	gbar = 0   	(pS/um2)	: 0.12 mho/cm2
-	vshift = 0	(mV)		: voltage shift (affects all)
+	vshift = 0	(mV)		: voltage shift (affects all but transferred from GLOBAL to RANGE for easier access in python - TODO)
 
 	cao  = 2.5	(mM)	        : external ca concentration
 	cai		(mM)

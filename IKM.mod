@@ -22,7 +22,7 @@ INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 NEURON {
 	SUFFIX km : renamend (Armin Jul 09)
 	USEION k READ ek WRITE ik
-    RANGE gkbar, m_inf, tau_m, gk, m, vshift
+    RANGE gbar, m_inf, tau_m, gk, m, vshift
 	GLOBAL taumax
 
 }

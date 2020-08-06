@@ -23,8 +23,8 @@ def setEphysParams(cell):
 	for seg in cell.soma:
 		seg.gbar_nap = 0.873246
 	
-	#for seg in cell.soma:
-	#	seg.km.gbar_km = 7.123963
+	for seg in cell.soma:
+		seg.gbar_km = 7.123963
 		
 	cell.basal.gbar_ih = 15.709707
 	cell.tuft.gbar_ih = 17.694744
@@ -38,8 +38,8 @@ def setEphysParams(cell):
 	cell.Ra_apical = 454.05939784
 	cell.apical.Ra = cell.Ra_apical
 	cell.tuft.gbar_sca = 3.67649485
-	#for seg in cell.tuft:
-	#	seg.sca.vshift = 7.4783781
+	for seg in cell.tuft:
+		seg.vshift_sca = 7.4783781
 	cell.tuft.gbar_kca = 9.75672674
 	return cell
 	
