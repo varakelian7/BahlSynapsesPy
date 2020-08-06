@@ -4,4 +4,5 @@ syntax:glob
 *.c
 *.o
 *.dll
+Results/*
 pyresults/*
