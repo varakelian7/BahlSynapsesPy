@@ -25,6 +25,8 @@ simname = "testcell"
 plotflag=2 # 0: don't open plots. 1: open python plot. 2: open python plot and photo file
 batchflag=1
 
+h('{load_file("netparmpi.hoc")}')  # to give each cell its own sequence generator
+
 myTauValue = 0.5 # This is an example of how to modify synaptic parameters
                  # Look in the cellClass file to see how this is used.
 
@@ -33,7 +35,7 @@ print("simname = " + simname + ", fstem = " + fstem)
 
 mytstop = 800 # ms, length of the simulation
 
-addSynInputs = 0 # 2: synaptic inputs and current injection
+addSynInputs = 1 # 2: synaptic inputs and current injection
 				 # 1: synaptic inputs only
 				 # 0: current injection only
 
@@ -58,6 +60,14 @@ else:
 
 ntot = numExcCells + numInhDendCells + numInhSomaCells
 
+ncell = ntot + 1
+
+pnm = h.ParallelNetManager(ncell)	# Set up a parallel net manager for all the cells
+pc = pnm.pc # Even if running serially, we can create and use this
+                         # in serial, pc.nhost == 1
+pnm.round_robin()					#Incorporate all processors - cells 0 through ncell-1
+
+
 
 #################################
 # Make network
@@ -66,7 +76,41 @@ import define_stimcells
 import cellClasses
 
 # Create stimulating cells
-excStimcell_list, inhDendStimcell_list, inhSomaStimcell_list, cells = define_stimcells.make_stim_cells(numExcCells, numInhDendCells, numInhSomaCells, stimPeriod)
+exc_gid, excStimcell_list, inhDendStimcell_list, inhSomaStimcell_list, cells = define_stimcells.make_stim_cells(pc, numExcCells, numInhDendCells, numInhSomaCells, stimPeriod)
+
+if addSynInputs>0:
+    
+    # Set incoming spike train
+    import numpy as np
+    import csv
+    # spiketrain = np.loadtxt("spikes1.0", delimiter=",")
+    # spiketrain = np.genfromtxt('spikes1.0', delimiter=',')[:,:-1]
+    
+    celltrainlist = []
+    with open("spikes1.0", "r") as f:
+        filelines = f.readlines()
+        for line in filelines:
+            spiketrain = line.split(",")
+            celltrainlist.append(list(map(float,spiketrain[:-1])))
+    
+            
+    # assuming that each element in celltrainlist
+    # is a list of spike times from a single input
+    # cell, let's model the effect of the activity
+    # from that single input cell onto a visual
+    # cortical pyramidal cell as follows:
+        
+    gidvec = h.Vector(len(celltrainlist[0])) #[exc_gid]*len(celltrainlist[0])    
+    gidvec.fill(exc_gid)
+    inputtimes = h.Vector(len(celltrainlist[0]))
+    for i,time in enumerate(celltrainlist[0]):
+        inputtimes.x[i] = time
+    s = h.PatternStim()
+    
+    s.play(inputtimes, gidvec)
+    
+    s.fake_output=1
+
 
 # Create model pyramidal cell
 model_cell = cellClasses.reduced_cell_model(myTau=myTauValue)
