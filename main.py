@@ -33,7 +33,7 @@ myTauValue = 0.5 # This is an example of how to modify synaptic parameters
 fstem="Results" + sltype + simname
 print("simname = " + simname + ", fstem = " + fstem)
 
-mytstop = 800 # ms, length of the simulation
+mytstop = 1200 # ms, length of the simulation
 
 addSynInputs = 1 # 2: synaptic inputs and current injection
 				 # 1: synaptic inputs only
@@ -86,12 +86,32 @@ if addSynInputs>0:
     # spiketrain = np.loadtxt("spikes1.0", delimiter=",")
     # spiketrain = np.genfromtxt('spikes1.0', delimiter=',')[:,:-1]
     
-    celltrainlist = []
-    with open("spikes1.0", "r") as f:
-        filelines = f.readlines()
-        for line in filelines:
-            spiketrain = line.split(",")
-            celltrainlist.append(list(map(float,spiketrain[:-1])))
+    from scipy import signal
+    
+    mydata = np.loadtxt("spiketimes0.060.0.dat", skiprows=1)
+    
+    #import matplotlib.pyplot as plt
+    
+    # plt.figure()
+    # plt.plot(mydata[:,0], mydata[:,1])
+    
+    
+    pp = signal.find_peaks(mydata[:,1], threshold=-20)
+    
+    inputtimes = []
+
+    for p in pp[0]:
+        #plt.plot(mydata[p,0], mydata[p,1], 'ro')   
+        inputtimes.append(mydata[p,0])
+    
+    #plt.show() 
+    
+    # celltrainlist = []
+    # with open("spikes1.0", "r") as f:
+    #     filelines = f.readlines()
+    #     for line in filelines:
+    #         spiketrain = line.split(",")
+    #         celltrainlist.append(list(map(float,spiketrain[:-1])))
     
             
     # assuming that each element in celltrainlist
@@ -100,14 +120,15 @@ if addSynInputs>0:
     # from that single input cell onto a visual
     # cortical pyramidal cell as follows:
         
-    gidvec = h.Vector(len(celltrainlist[0])) #[exc_gid]*len(celltrainlist[0])    
+    gidvec = h.Vector(len(inputtimes)) #[exc_gid]*len(celltrainlist[0])    
     gidvec.fill(exc_gid)
-    inputtimes = h.Vector(len(celltrainlist[0]))
-    for i,time in enumerate(celltrainlist[0]):
-        inputtimes.x[i] = time
+    spktimes = h.Vector(len(inputtimes))
+    for i,time in enumerate(inputtimes):
+        spktimes.x[i] = time
+        print(time)
     s = h.PatternStim()
     
-    s.play(inputtimes, gidvec)
+    s.play(spktimes, gidvec)
     
     s.fake_output=1
 

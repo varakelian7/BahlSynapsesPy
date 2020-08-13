@@ -9,8 +9,9 @@ def make_stim_cells(pc,numExc, numInhDend, numInhSoma, stPer): # local i,j  loca
     
     for r in range (numExc):
         cell = cellClasses.stimcell()
-        cell.pp.start = 0
-        cell.pp.interval = stPer
+        cell.pp.start = -1
+        cell.pp.interval = 10000 #stPer
+        cell.pp.number = 0 #stPer
         lcl_excStimcell_list.append(cell)
         cells.append(cell)
         exc_gid = len(cells)-1
