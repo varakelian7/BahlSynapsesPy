@@ -16,7 +16,7 @@ def make_stim_cells(pc,numExc, numInhDend, numInhSoma, stPer): # local i,j  loca
         cells.append(cell)
         exc_gid = len(cells)-1
         nc = cell.connect2target(None)  # attach spike detector to cell
-        pc.cell(r+1, nc)  # associate cell's gid with its spike detector
+        pc.cell(r, nc)  # associate cell's gid with its spike detector
 
     for r in range (numInhDend):
         cell = cellClasses.stimcell()
@@ -25,12 +25,16 @@ def make_stim_cells(pc,numExc, numInhDend, numInhSoma, stPer): # local i,j  loca
         lcl_inhDendStimcell_list.append(cell)
         cells.append(cell)
 
+    add2 = len(cells)
     for r in range (numInhSoma):
         cell = cellClasses.stimcell()
         cell.pp.interval = stPer*2
         cell.pp.start = 1e9 # stPer/2+stPer
         lcl_inhSomaStimcell_list.append(cell)
         cells.append(cell)
+        inh_gid = len(cells)-1
+        nc = cell.connect2target(None)  # attach spike detector to cell
+        pc.cell(r+add2, nc)  # associate cell's gid with its spike detector
 
-    return exc_gid, lcl_excStimcell_list, lcl_inhDendStimcell_list, lcl_inhSomaStimcell_list, cells
+    return exc_gid, inh_gid, lcl_excStimcell_list, lcl_inhDendStimcell_list, lcl_inhSomaStimcell_list, cells
 

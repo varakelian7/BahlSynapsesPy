@@ -76,7 +76,7 @@ import define_stimcells
 import cellClasses
 
 # Create stimulating cells
-exc_gid, excStimcell_list, inhDendStimcell_list, inhSomaStimcell_list, cells = define_stimcells.make_stim_cells(pc, numExcCells, numInhDendCells, numInhSomaCells, stimPeriod)
+exc_gid, inh_gid, excStimcell_list, inhDendStimcell_list, inhSomaStimcell_list, cells = define_stimcells.make_stim_cells(pc, numExcCells, numInhDendCells, numInhSomaCells, stimPeriod)
 
 if addSynInputs>0:
     
@@ -99,10 +99,12 @@ if addSynInputs>0:
     pp = signal.find_peaks(mydata[:,1], threshold=-20)
     
     inputtimes = []
+    inh_inputtimes = []
 
     for p in pp[0]:
         #plt.plot(mydata[p,0], mydata[p,1], 'ro')   
         inputtimes.append(mydata[p,0])
+        inh_inputtimes.append(mydata[p,0]+3) # inhibitory delay
     
     #plt.show() 
     
@@ -122,15 +124,29 @@ if addSynInputs>0:
         
     gidvec = h.Vector(len(inputtimes)) #[exc_gid]*len(celltrainlist[0])    
     gidvec.fill(exc_gid)
+
+        
+    inh_gidvec = h.Vector(len(inh_inputtimes)) #[exc_gid]*len(celltrainlist[0])    
+    inh_gidvec.fill(inh_gid)
+    
     spktimes = h.Vector(len(inputtimes))
     for i,time in enumerate(inputtimes):
         spktimes.x[i] = time
         print(time)
-    s = h.PatternStim()
-    
-    s.play(spktimes, gidvec)
-    
+
+    s = h.PatternStim()    
+    s.play(spktimes, gidvec)    
     s.fake_output=1
+
+    inh_spktimes = h.Vector(len(inh_inputtimes))
+    for i,time in enumerate(inh_inputtimes):
+        inh_spktimes.x[i] = time
+        print("inh time =",time)
+
+    inhs = h.PatternStim()    
+    inhs.play(inh_spktimes, inh_gidvec)
+    inhs.fake_output=1
+    print("inh_gid =", inh_gid)
 
 
 # Create model pyramidal cell
@@ -176,7 +192,7 @@ for r in range(len(model_cell.excStimcell_list)):
 		nclist.append(nc)
 		
 		nc.delay = 3 # ms, the length of the axonal conduction delay and the synaptic delay
-		nc.weight[0] = model_cell.excitatory_syn_weight
+		nc.weight[0] = 4*model_cell.excitatory_syn_weight
 		print("adding exc syn from ", r, " to Excitatory synapse #", j)
 
 
@@ -196,7 +212,7 @@ for r in range(len(model_cell.inhSomaStimcell_list)):
 		nc = model_cell.inhSomaStimcell_list[r].connect2target(syn) # connect the presynaptic cell (inhSomaStimcell_list.object(r) to the synapse object on the postsynaptic cell (syn)
 		nclist.append(nc)
 		nc.delay = 3 # ms, the length of the axonal conduction delay and the synaptic delay
-		nc.weight[0] = model_cell.inhSoma_syn_weight
+		nc.weight[0] = 0 # model_cell.inhSoma_syn_weight/20
 		print("adding inhsoma syn from ", r, " to inhibitory somatic synapse #", j)
 
 
@@ -232,6 +248,7 @@ for r in range(len(model_cell.inhSomaStimcell_list)):
 #################################
 
 if addSynInputs!=1:
+    print("add current injection")
     stimobj = h.IClamp(model_cell.soma(0.5))
     stimobj.delay = injectionStart # ms, time after start of sim when you want the current injection to begin
     stimobj.dur = injectionDuration # ms, duration of current pulse
