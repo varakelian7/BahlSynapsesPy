@@ -4,7 +4,7 @@ Created on Tue Jul 28 12:50:51 2020
 Modified from Bahl et al 2012
 Converted to Python
 Added ability to receive synaptic inputs (and/or current injection)
-@author: maria_000
+@author: marianne.bezaire@gmail.com
 """
 #################################
 # Load modules
@@ -46,6 +46,10 @@ injectionStart = 100 # ms
 stimPeriod = 125 # ms, the interval between input spikes
                  # from the artificial presynaptic neurons
 
+
+#################################
+# Design network
+#################################
 
 if addSynInputs>0:
 	numExcCells = 2
