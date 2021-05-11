@@ -27,3 +27,36 @@ Other options:
 
 ## Usage
 You can run the main.py file to produce two output plots in Spyder. You may wish to customize some parameters in the "Set parameters" section of main.py to change properties of the cell or the stimulation (synaptic input versus current injection) or whether plots are displayed or saved as image files.
+
+### Outputs
+
+### Parameters
+You may wish to add or customize parameters in the "Set parameters" section of main.py to change properties of the cell or the stimulation (synaptic input versus current injection) or whether plots are displayed or saved as image files. The following parameters are defined:
+- **h.celsius** *Float*. Temperature of the model system in Celsius. This is a standard NEURON parameter
+- **sltype** *String*. Forward or backward (Windows) slash for paths
+- **simname** *String*. Unique name for simulation; the code will create a directory with this name to store the simulation results
+- **plotflag** *Integer*. Controls plotting behavior of the simulation. Options are: 
+  - 0 = don't open plots
+  - 1 = open python plot
+  - 2 = open python plot and photo file
+- **batchflag** *Boolean*. Whether this simulation is being run as part of a batch of simulations:
+  - 1 = part of batch
+  - 0 = single simulation
+
+- **myTauValue** *Float*. The rise time constant in ms of one of the synapses onto the model cell. (An example parameter; users can add their own similar to this)
+
+- **mytstop** *Float*. Length of the simulation in milliseconds
+
+- **addSynInputs** *Integer*. The type of simulation used in the model:
+  - 2 = synaptic inputs and current injection
+  - 1 = synaptic inputs only
+  - 0 = current injection only
+
+There are additional parameters for the current injection stimulation; they are relevant if addSynInputs = 0 or 2:
+- **injectionLevel** *Float*. Amplitude of the current injection in nA (nanoAmps)
+- **injectionDuration** *Float*. Duration of the current injection in ms (milliseconds)
+- **injectionStart** *Float*. Start time (onset) of the current injection in ms
+
+There is an additional parameter for the synaptic input stimulation, relevant if addSynInputs = 1;
+- **stimPeriod** *Float*. The interval in ms between input spikes from the artificial presynaptic neurons
+
