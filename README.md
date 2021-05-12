@@ -29,6 +29,9 @@ Other options:
 You can run the main.py file to produce two output plots in Spyder. You may wish to customize some parameters in the "Set parameters" section of main.py to change properties of the cell or the stimulation (synaptic input versus current injection) or whether plots are displayed or saved as image files.
 
 ### Outputs
+This simulation produces two types of data, the spike times of the pyramidal cell and the membrane potential traces for various parts of the cell. These outputs are produced as figures in python (optional), images of the figures, and text files of the data:
+- \[simname\]\_spikes.dat
+- \[simname\]\_voltages.dat
 
 ### Parameters
 You may wish to add or customize parameters in the "Set parameters" section of main.py to change properties of the cell or the stimulation (synaptic input versus current injection) or whether plots are displayed or saved as image files. The following parameters are defined:
@@ -37,8 +40,8 @@ You may wish to add or customize parameters in the "Set parameters" section of m
 - **simname** *String*. Unique name for simulation; the code will create a directory with this name to store the simulation results
 - **plotflag** *Integer*. Controls plotting behavior of the simulation. Options are: 
   - 0 = don't open plots
-  - 1 = open python plot
-  - 2 = open python plot and photo file
+  - 1 = open python plots
+  - 2 = open python plots and photo files
 - **batchflag** *Boolean*. Whether this simulation is being run as part of a batch of simulations:
   - 1 = part of batch
   - 0 = single simulation
