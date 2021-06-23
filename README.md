@@ -1,10 +1,11 @@
 # BahlSynapsesPy
 
-This is a model of a single pyramidal cell with realistic morphology and ion channels.
+This is a model of a single pyramidal cell with realistic morphology and ion channels, based on one of the pyramidal cell models from:
+Bahl A, Stemmler MB, Herz AV, Roth A (2012) [Automated optimization of a reduced layer 5 pyramidal cell model based on experimental data.](https://www.sciencedirect.com/science/article/pii/S016502701200129X?via%3Dihub) *J Neurosci Methods* 210:22-34. Original code is available in ModelDB, [#146026](https://senselab.med.yale.edu/ModelDB/ShowModel?model=146026).
 
-It has been modified to specify either an input from an electrode or synaptic inputs.
+The code has been converted to NEURON+Python and modified to specify either an input from an electrode or synaptic inputs.
 
-It will simulate the cell's response to the inputs and record the membrane potential at the soma and in the cell dendrites. Then it will save a picture of a plot of the membrane potential with time.
+The model will simulate the cell's response to the inputs and record the membrane potential at the soma and in the cell dendrites. Then the code will save a picture of a plot of the membrane potential with time.
 
 ## Download and Install
 Using GitHub Desktop:
