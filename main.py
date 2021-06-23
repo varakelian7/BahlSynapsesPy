@@ -79,43 +79,61 @@ model_cell.inhDendStimcell_list = inhDendStimcell_list
 model_cell.inhSomaStimcell_list = inhSomaStimcell_list
 
 
-# The next two lines are where you can set which cell to use. Different
-# pyramidal cells (and these pyramidal cell models) have slightly
-# different electrical personalities (ephys or electrophysiology is the
-# technical term for that). You can choose from init_model1, init_model2,
-# ...3, 4, 6, 7, 8 in the init_models_with_ca folder, currently.
+# The next few lines are where you can set which model pyramidal cell
+# to use. Different pyramidal cells (and these pyramidal cell models)
+# have slightly different electrical personalities (ephys or 
+# electrophysiology is the technical term for that). You can choose
+# from init_model1, init_model2, ...3, 4, 6, 7, 8 in the 
+# init_models_with_ca folder, currently.
+
 from init_models_with_ca import init_model1
 
+# create and initialize a new cell of this model type
 model_cell = init_model1.setEphysParams(model_cell)
 model_cell.recalculate_passive_properties()
 model_cell.recalculate_channel_densities()
 
-cells.append(model_cell) # add to list of cells
+cells.append(model_cell) # add this new cell to a list of created cells
 
-# # this is an example of altering the resting membrane potential
+# # this is an example of altering the resting membrane potential of the
+# # cell by iterating over all sections in the cell and setting the
+# # reversal potential of the leak channels (which are always active)
 # for sec in model_cell.all:
 # 	sec.e_pas = -83.056442
+
+# # And now setting the starting membrane potential of the cell
 # h.v_init = -75
+
+# # Now, recalculate the other electrical properties now that the 
+# # resting membrane potential has been changed.
 # model_cell.recalculate_passive_properties()
 
 
 
-# If synaptic inputs were speficied above,
-# the lists below will be populates and the
-# code will efine synapses on the model pyramidal cell
+# If synaptic inputs were specified above,
+# the lists below will be populated and the
+# code will define synapses on the model pyramidal cell
 # and connect stimulating cells to it
 nclist = [] #new List()
-print("excStimcell_list length = ", len(model_cell.excStimcell_list), " and preExcDend_list length = ", len(model_cell.preExcDend_list))
+print("excStimcell_list length = ", len(model_cell.excStimcell_list), 
+      " and preExcDend_list length = ", len(model_cell.preExcDend_list))
 
-for r in range(len(model_cell.excStimcell_list)):
-	for j in range(len(model_cell.preExcDend_list)): # For each synapse location in the list of excitatory synapses on the dendrite
-		syn = model_cell.preExcDend_list[j] # grab the synapse object
+for r in range(len(model_cell.excStimcell_list)): # For each artificial 
+        # stimulating cell that synapses onto this type of location,
+	for j in range(len(model_cell.preExcDend_list)): # For each synapse
+            # location in the list of excitatory synapses on the dendrite
+
+        # grab the synapse object
+		syn = model_cell.preExcDend_list[j]
 		#ncstim = h.NetCon(model_cell.excStimcell_list[r], syn)
-		nc = model_cell.excStimcell_list[r].connect2target(syn) # connect the presynaptic cell (excStimcell_list.object(r) to the synapse object on the postsynaptic cell (syn)
-		nclist.append(nc)
+        
+        # connect the presynaptic cell (excStimcell_list.object(r)
+        # to the synapse object on the postsynaptic cell (syn)
+		nc = model_cell.excStimcell_list[r].connect2target(syn) 
+		nclist.append(nc) # add the synaptic connection object to a list
 		
-		nc.delay = 3 # ms, the length of the axonal conduction delay and the synaptic delay
-		nc.weight[0] = model_cell.excitatory_syn_weight
+		nc.delay = 3 # ms, axonal conduction delay + synaptic delay
+		nc.weight[0] = model_cell.excitatory_syn_weight # synaptic weight 
 		print("adding exc syn from ", r, " to Excitatory synapse #", j)
 
 
@@ -124,9 +142,9 @@ for r in range(len(model_cell.inhDendStimcell_list)):
 		syn = model_cell.preInhDend_list[j] # grab the synapse object
 		nc = model_cell.inhDendStimcell_list[r].connect2target(syn) # connect the presynaptic cell (inhDendStimcell_list.object(r) to the synapse object on the postsynaptic cell (syn)
 		nclist.append(nc)
-		nc.delay = 3 # ms, the length of the axonal conduction delay and the synaptic delay
-		nc.weight[0] = model_cell.inhDend_syn_weight
-		print("adding inhdend syn from ", r, " to inhibitory dendritic synapse #", j)
+		nc.delay = 3 # ms, axonal conduction delay + synaptic delay
+		nc.weight[0] = model_cell.inhDend_syn_weight # synaptic weight
+		print("adding inhdend syn ", r, " to inhibitory dendritic synapse #", j)
 
 
 for r in range(len(model_cell.inhSomaStimcell_list)):
@@ -134,13 +152,25 @@ for r in range(len(model_cell.inhSomaStimcell_list)):
 		syn = model_cell.preInhSoma_list[j] # grab the synapse object
 		nc = model_cell.inhSomaStimcell_list[r].connect2target(syn) # connect the presynaptic cell (inhSomaStimcell_list.object(r) to the synapse object on the postsynaptic cell (syn)
 		nclist.append(nc)
-		nc.delay = 3 # ms, the length of the axonal conduction delay and the synaptic delay
-		nc.weight[0] = model_cell.inhSoma_syn_weight
+		nc.delay = 3 # ms, axonal conduction delay + synaptic delay
+		nc.weight[0] = model_cell.inhSoma_syn_weight # synaptic weight
 		print("adding inhsoma syn from ", r, " to inhibitory somatic synapse #", j)
 
 
 
-# Note: the configuration of the for loop decides how many synapses are going to made:
+# # Note: Regarding the connection-making code above,
+# # the configuration of the for loop decides how many 
+# # synapses are going to made. Currently, it will loop over
+# # each artificial stimulating cell that exists (these cells
+# # were created using the define_stimcells module earlier).
+# # For each artificial stimulating cell, another for loop will
+# # loop over each synapse on the model cell that is included
+# # in a list of synapses meant to receive input from that
+# # stimulating cell.
+# # Within the inner for loop, code can be added to connect the
+# # artificial stimulating cell to the particular synapse on the
+# # model cell.
+#
 # for r=0, inhSomaStimcell_list.count()-1{
 # 	for j=0, preInhSoma_list.count()-1 {
 #      ...
