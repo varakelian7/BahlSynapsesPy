@@ -23,7 +23,7 @@ h.load_file("nrngui.hoc") # load_file
 h.celsius = 37 # temperature = body temp
 sltype="/"
 simname = "testcell"
-plotflag=2 # 0: don't open plots. 1: open python plot.
+plotflag=1 # 0: don't open plots. 1: open python plot.
            # 2: open python plot and photo file
            
 batchflag=1
@@ -33,7 +33,7 @@ print("simname = " + simname + ", fstem = " + fstem)
 
 # Parameter to set the decay time constant of GABA_A
 # synapses onto the pyramidal neuron
-myTauValue = 3 # This is an example of (one way to) 
+myTauValue = 10  # This is an example of (one way to) 
                  # how to modify synaptic parameters
                  # Look at (approx) line 77 in this
                  # file to see how this parameter is
