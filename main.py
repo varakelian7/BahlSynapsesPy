@@ -24,16 +24,17 @@ sltype="/"
 simname = "testcell"
 plotflag=2 # 0: don't open plots. 1: open python plot. 2: open python plot and photo file
 batchflag=1
+fstem="Results" + sltype + simname
+print("simname = " + simname + ", fstem = " + fstem)
 
 myTauValue = 0.5 # This is an example of how to modify synaptic parameters
                  # Look in the cellClass file to see how this is used.
 
-fstem="Results" + sltype + simname
-print("simname = " + simname + ", fstem = " + fstem)
+
 
 mytstop = 800 # ms, length of the simulation
 
-addSynInputs = 0 # 2: synaptic inputs and current injection
+addSynInputs = 1 # 2: synaptic inputs and current injection
 				 # 1: synaptic inputs only
 				 # 0: current injection only
 
