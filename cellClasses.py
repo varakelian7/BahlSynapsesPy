@@ -324,9 +324,9 @@ class reduced_cell_model():
         for sec in self.inhsomasyn_list:
             syn_ = h.MyExp2Syn(sec(0.5))
             self.preInhSoma_list.append(syn_)    # GABA_A Synapses onto Cell Body
-            syn_.tau1 = myTauValue # synaptic rise time constant in ms
-            syn_.tau2 = 3 # synaptic decay time constant in ms
-            syn_.e = -70 # reversal potential of the synaptic current
+            syn_.tau1 = 0.5 # synaptic rise time constant in ms
+            syn_.tau2 = myTauValue # synaptic decay time constant in ms
+            syn_.e = -75 # reversal potential of the synaptic current
 
 
             self.recInhSomaCurrent.append(h.Vector())    
@@ -348,8 +348,8 @@ class reduced_cell_model():
             syn_ = h.MyExp2Syn(sec(0.5))
             self.preInhDend_list.append(syn_)    # GABA_A Synapses onto Cell Dendrites
             syn_.tau1 = 0.5 # synaptic rise time constant in ms
-            syn_.tau2 = 3 # synaptic decay time constant in ms
-            syn_.e = -70 # reversal potential of the synaptic current
+            syn_.tau2 = myTauValue # synaptic decay time constant in ms
+            syn_.e = -75 # reversal potential of the synaptic current
             self.recInhDendCurrent.append(h.Vector())        
             self.recInhDendCurrent[s].record(self.preInhDend_list[s]._ref_i)
 
@@ -382,5 +382,5 @@ class reduced_cell_model():
 
         # Synaptic conductances (max)
         self.excitatory_syn_weight = 0.005 # the maximum synaptic conductance in microSiemens, aka the synaptic amplitude, of the excitatory connections
-        self.inhDend_syn_weight = 0.003 # the maximum synaptic conductance of the inhibitory connections onto the dendrites
-        self.inhSoma_syn_weight = 0.006 # the maximum synaptic conductance of the inhibitory connections onto the soma
+        self.inhDend_syn_weight = 0.015 # the maximum synaptic conductance of the inhibitory connections onto the dendrites
+        self.inhSoma_syn_weight = 0.03 # the maximum synaptic conductance of the inhibitory connections onto the soma

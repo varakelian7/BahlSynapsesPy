@@ -31,9 +31,9 @@ fstem="Results" + sltype + simname
 print("simname = " + simname + ", fstem = " + fstem)
 
 
-# Parameter to set the rise time constant of GABA_A
-# synapses onto the cell body of the pyramidal neuron
-myTauValue = 0.5 # This is an example of (one way to) 
+# Parameter to set the decay time constant of GABA_A
+# synapses onto the pyramidal neuron
+myTauValue = 3 # This is an example of (one way to) 
                  # how to modify synaptic parameters
                  # Look at (approx) line 77 in this
                  # file to see how this parameter is
