@@ -3,7 +3,8 @@
 Created on Tue Jul 28 12:50:51 2020
 Modified from Bahl et al 2012
 Converted to Python
-Added ability to receive synaptic inputs (and/or current injection)
+Added ability to receive synaptic input
+(and/or current injection)
 @author: marianne.bezaire@gmail.com
 """
 #################################
@@ -22,14 +23,27 @@ h.load_file("nrngui.hoc") # load_file
 h.celsius = 37 # temperature = body temp
 sltype="/"
 simname = "testcell"
-plotflag=2 # 0: don't open plots. 1: open python plot. 2: open python plot and photo file
+plotflag=2 # 0: don't open plots. 1: open python plot.
+           # 2: open python plot and photo file
+           
 batchflag=1
 fstem="Results" + sltype + simname
 print("simname = " + simname + ", fstem = " + fstem)
 
-myTauValue = 0.5 # This is an example of how to modify synaptic parameters
-                 # Look in the cellClass file to see how this is used.
 
+# Parameter to set the rise time constant of GABA_A
+# synapses onto the cell body of the pyramidal neuron
+myTauValue = 0.5 # This is an example of (one way to) 
+                 # how to modify synaptic parameters
+                 # Look at (approx) line 77 in this
+                 # file to see how this parameter is
+                 # passed to the cell; then look in 
+                 # the cellClass file to trace the
+                 # usage to the specific synapse
+                 # that references this parameter
+                 #
+                 # You may implement a similar strategy
+                 # to change other parameters in the model
 
 
 mytstop = 800 # ms, length of the simulation

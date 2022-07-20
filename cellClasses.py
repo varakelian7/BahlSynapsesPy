@@ -1,14 +1,22 @@
+# Define types of model cells here
+# so that instances (objects based on them)
+# can be created in main.py after loading in
+# this file
+
+# The classes defined below include:
+# reduced_cell_model: the pyramidal cell model
+# stimcell: an artificial cell that synapses onto
+#            the pyramidal cell and that can spike
+#            during the simulation, activating a 
+#            postsynaptic current in the pyramidal cell.
+#            Note: Excitatory and inhibitory stimulating
+#            cells can both be created from this cell class.
+#            The difference is which synapse on the post-
+#            synaptic pyramidal cell you connect them to
+
 from neuron import h
 import math
-
-class pyNetStim():
-    def __init__(self):
-        self.x = 0; self.y = 0; self.z = 0
-        self.interval = 10 # ms
-        self.number = 0
-        self.noise = 0 # 0 = no noise, same interval every time. 1 = maximum noise, variable interval with poisson mean of interval ms                
-        self.start = 0
-        
+  
 class stimcell():
     def __init__(self):
         self.is_art=1
@@ -315,10 +323,12 @@ class reduced_cell_model():
         self.recInhSomaCurrent = []
         for sec in self.inhsomasyn_list:
             syn_ = h.MyExp2Syn(sec(0.5))
-            self.preInhSoma_list.append(syn_)    # AMPA        EC
-            syn_.tau1 = myTauValue #0.5
-            syn_.tau2 = 3
-            syn_.e = -70
+            self.preInhSoma_list.append(syn_)    # GABA_A Synapses onto Cell Body
+            syn_.tau1 = myTauValue # synaptic rise time constant in ms
+            syn_.tau2 = 3 # synaptic decay time constant in ms
+            syn_.e = -70 # reversal potential of the synaptic current
+
+
             self.recInhSomaCurrent.append(h.Vector())    
             self.recInhSomaCurrent[s].record(self.preInhSoma_list[s]._ref_i)
 
@@ -336,10 +346,10 @@ class reduced_cell_model():
         self.recInhDendCurrent = []
         for sec in self.inhdendsyn_list:
             syn_ = h.MyExp2Syn(sec(0.5))
-            self.preInhDend_list.append(syn_)    # AMPA        EC
-            syn_.tau1 = 0.5
-            syn_.tau2 = 3
-            syn_.e = -70
+            self.preInhDend_list.append(syn_)    # GABA_A Synapses onto Cell Dendrites
+            syn_.tau1 = 0.5 # synaptic rise time constant in ms
+            syn_.tau2 = 3 # synaptic decay time constant in ms
+            syn_.e = -70 # reversal potential of the synaptic current
             self.recInhDendCurrent.append(h.Vector())        
             self.recInhDendCurrent[s].record(self.preInhDend_list[s]._ref_i)
 
@@ -353,10 +363,10 @@ class reduced_cell_model():
         self.recExcCurrent = []
         for sec in self.excsyn_list:
             syn_ = h.MyExp2Syn(sec(0.5))
-            self.preExcDend_list.append(syn_)    # AMPA        EC
-            syn_.tau1 = 1
-            syn_.tau2 = 5
-            syn_.e = 0
+            self.preExcDend_list.append(syn_)    # AMPA Synapse
+            syn_.tau1 = 1 # synaptic rise time constant in ms
+            syn_.tau2 = 5 # synaptic decay time constant in ms
+            syn_.e = 0 # reversal potential of the synaptic current
             self.recExcCurrent.append(h.Vector())
             self.recExcCurrent[s].record(self.preExcDend_list[s]._ref_i)
 
@@ -370,6 +380,7 @@ class reduced_cell_model():
 
         self.totExc = s
 
+        # Synaptic conductances (max)
         self.excitatory_syn_weight = 0.005 # the maximum synaptic conductance in microSiemens, aka the synaptic amplitude, of the excitatory connections
         self.inhDend_syn_weight = 0.003 # the maximum synaptic conductance of the inhibitory connections onto the dendrites
         self.inhSoma_syn_weight = 0.006 # the maximum synaptic conductance of the inhibitory connections onto the soma
