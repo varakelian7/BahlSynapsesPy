@@ -1,4 +1,0 @@
-load_file("./init_models_with_ca/init_model2.hoc")
-if (plotflag==1) {
-	load_file("regular_spiking.ses")
-}
