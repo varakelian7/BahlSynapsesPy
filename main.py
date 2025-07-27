@@ -21,7 +21,7 @@ h.load_file("nrngui.hoc") # load_file
 # Set parameters
 #################################
 h.celsius = 37 # temperature = body temp
-sltype="/"
+sltype="/" #backslash for mac?
 simname = "testcell"
 plotflag=1 # 0: don't open plots. 1: open python plot.
            # 2: open python plot and photo file

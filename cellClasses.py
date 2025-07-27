@@ -16,6 +16,9 @@
 
 from neuron import h
 import math
+h.load_file("mynetstim.mod")
+
+
   
 class stimcell():
     def __init__(self):
@@ -321,16 +324,16 @@ class reduced_cell_model():
 
         s=0
         self.recInhSomaCurrent = []
+        inh_soma_locs = [0.3, 0.5, 0.7]  # Add 3 synapses to soma
         for sec in self.inhsomasyn_list:
-            syn_ = h.MyExp2Syn(sec(0.5))
-            self.preInhSoma_list.append(syn_)    # GABA_A Synapses onto Cell Body
-            syn_.tau1 = 0.5 # synaptic rise time constant in ms
-            syn_.tau2 = myTauValue # synaptic decay time constant in ms
-            syn_.e = -75 # reversal potential of the synaptic current
-
-
-            self.recInhSomaCurrent.append(h.Vector())    
-            self.recInhSomaCurrent[s].record(self.preInhSoma_list[s]._ref_i)
+            for loc in inh_soma_locs:
+                syn_ = h.MyExp2Syn(sec(loc))
+                syn_.tau1 = 0.5 # synaptic rise time constant in ms
+                syn_.tau2 = myTauValue # synaptic decay time constant in ms
+                syn_.e = -75 # reversal potential of the synaptic current
+                self.preInhSoma_list.append(syn_)    # GABA_A Synapses onto Cell Body
+                self.recInhSomaCurrent.append(h.Vector())    
+                self.recInhSomaCurrent[-1].record(syn_._ref_i)
 
             #sprint(cmdstr,"objref recInhSomaCurrent%d", s)
             #{execute(cmdstr)}
@@ -344,14 +347,16 @@ class reduced_cell_model():
 
         s = 0
         self.recInhDendCurrent = []
+        inh_dend_locs = [0.2, 0.4, 0.6, 0.8]  # Create 4 synapses per dendritic section
         for sec in self.inhdendsyn_list:
-            syn_ = h.MyExp2Syn(sec(0.5))
-            self.preInhDend_list.append(syn_)    # GABA_A Synapses onto Cell Dendrites
-            syn_.tau1 = 0.5 # synaptic rise time constant in ms
-            syn_.tau2 = myTauValue # synaptic decay time constant in ms
-            syn_.e = -75 # reversal potential of the synaptic current
-            self.recInhDendCurrent.append(h.Vector())        
-            self.recInhDendCurrent[s].record(self.preInhDend_list[s]._ref_i)
+            for loc in inh_dend_locs:
+                syn_ = h.MyExp2Syn(sec(loc))
+                syn_.tau1 = 0.5 # synaptic rise time constant in ms
+                syn_.tau2 = myTauValue # synaptic decay time constant in ms
+                syn_.e = -75 # reversal potential of the synaptic current
+                self.preInhDend_list.append(syn_)    # GABA_A Synapses onto Cell Dendrites
+                self.recInhDendCurrent.append(h.Vector())        
+                self.recInhDendCurrent[-1].record(syn_._ref_i)
 
             #sprint(cmdstr,"recInhDendCurrent%d = new Vector()", s)
             #sprint(cmdstr,"recInhDendCurrent%d.record(&preInhDend_list.object(%d).i)", s, s)
